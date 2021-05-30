@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.sr_helper">
+    package="com.feliskio.sr_helper">
    <application
         android:label="sr_helper"
         android:icon="@mipmap/ic_launcher">
