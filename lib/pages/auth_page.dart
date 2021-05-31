@@ -23,6 +23,8 @@ class AuthPage extends StatelessWidget {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailController.value.text,
           password: passwordController.value.text);
+
+      Navigator.of(ctx).pop();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         showSnackbar(ctx, 'The password provided is too weak.');
@@ -32,8 +34,6 @@ class AuthPage extends StatelessWidget {
     } catch (e) {
       print(e);
     }
-
-    Navigator.of(ctx).pop();
   }
 
   void signIn(BuildContext ctx) async {
@@ -46,6 +46,8 @@ class AuthPage extends StatelessWidget {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: emailController.value.text,
           password: passwordController.value.text);
+
+      Navigator.of(ctx).pop();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         showSnackbar(ctx, 'No user found for that email.');
@@ -53,8 +55,6 @@ class AuthPage extends StatelessWidget {
         showSnackbar(ctx, 'Wrong password provided for that user.');
       }
     }
-
-    Navigator.of(ctx).pop();
   }
 
   @override
