@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../navigation/app_drawer.dart';
+
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -7,6 +9,7 @@ class HomePage extends StatelessWidget {
         appBar: AppBar(
           title: Text('Charity Run Helper'),
         ),
+        drawer: AppDrawer(),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

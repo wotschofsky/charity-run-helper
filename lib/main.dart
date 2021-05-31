@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import './pages/home_page.dart';
+import './pages/auth_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,24 +15,15 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.deepOrange,
-        ),
-        home: FutureBuilder(
-          future: _initialization,
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              print(snapshot.error);
-              return Text('An error occurred!');
-            }
-
-            if (snapshot.connectionState == ConnectionState.done) {
-              return HomePage();
-            }
-
-            return CircularProgressIndicator();
-          },
-        ));
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.deepOrange,
+      ),
+      initialRoute: '/',
+      routes: {
+        '/': (ctx) => HomePage(),
+        '/auth': (ctx) => AuthPage(),
+      },
+    );
   }
 }
