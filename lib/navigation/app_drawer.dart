@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 class AppDrawer extends StatefulWidget {
   @override
@@ -56,14 +57,14 @@ class _AppDrawerState extends State<AppDrawer> {
           ListTile(
             leading: Icon(Icons.home),
             title: Text('Home'),
-            onTap: () => Navigator.of(context).pushReplacementNamed('/'),
+            onTap: () => VxNavigator.of(context).replace(Uri(path: '/')),
           ),
           Divider(),
           if (!signedIn)
             ListTile(
               leading: Icon(Icons.vpn_key),
               title: Text('Login'),
-              onTap: () => Navigator.of(context).pushNamed('/auth'),
+              onTap: () => VxNavigator.of(context).push(Uri(path: '/auth')),
             )
           else
             ListTile(

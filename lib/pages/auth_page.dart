@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:form_validator/form_validator.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 class AuthPage extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
@@ -24,7 +25,7 @@ class AuthPage extends StatelessWidget {
           email: emailController.value.text,
           password: passwordController.value.text);
 
-      Navigator.of(ctx).pop();
+      VxNavigator.of(ctx).pop();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         showSnackbar(ctx, 'The password provided is too weak.');
@@ -47,7 +48,7 @@ class AuthPage extends StatelessWidget {
           email: emailController.value.text,
           password: passwordController.value.text);
 
-      Navigator.of(ctx).pop();
+      VxNavigator.of(ctx).pop();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         showSnackbar(ctx, 'No user found for that email.');
