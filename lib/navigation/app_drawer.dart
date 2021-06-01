@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -34,6 +37,12 @@ class _AppDrawerState extends State<AppDrawer> {
     return FirebaseAuth.instance.currentUser!.email!;
   }
 
+  String get gravatarUrl {
+    final email = FirebaseAuth.instance.currentUser!.email!;
+    final emailHash = md5.convert(utf8.encode(email)).toString();
+    return 'https://www.gravatar.com/avatar/$emailHash?s=108&d=monsterid';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -46,12 +55,24 @@ class _AppDrawerState extends State<AppDrawer> {
                     image: NetworkImage(
                         'https://images.unsplash.com/photo-1590333748338-d629e4564ad9?w=500'),
                     fit: BoxFit.cover)),
-            child: Align(
-              alignment: Alignment.bottomLeft,
-              child: Text(
-                label,
-                style: const TextStyle(color: Colors.white, fontSize: 20),
-              ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (signedIn)
+                  CircleAvatar(
+                    radius: 36,
+                    foregroundImage: NetworkImage(gravatarUrl),
+                    backgroundColor: Colors.grey,
+                  ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 16, bottom: 8),
+                  child: Text(
+                    label,
+                    style: const TextStyle(color: Colors.white, fontSize: 20),
+                  ),
+                ),
+              ],
             ),
           ),
           ListTile(
