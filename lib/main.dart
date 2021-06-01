@@ -4,6 +4,7 @@ import 'package:velocity_x/velocity_x.dart';
 
 import './pages/home_page.dart';
 import './pages/auth_page.dart';
+import './pages/not_found_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,10 +23,13 @@ class App extends StatelessWidget {
         primarySwatch: Colors.deepOrange,
       ),
       routeInformationParser: VxInformationParser(),
-      routerDelegate: VxNavigator(routes: {
-        '/': (uri, params) => MaterialPage(child: HomePage()),
-        '/auth': (uri, params) => MaterialPage(child: AuthPage()),
-      }),
+      routerDelegate: VxNavigator(
+        routes: {
+          '/': (uri, params) => MaterialPage(child: HomePage()),
+          '/auth': (uri, params) => MaterialPage(child: AuthPage()),
+        },
+        notFoundPage: (uri, params) => MaterialPage(child: NotFoundPage()),
+      ),
     );
   }
 }
