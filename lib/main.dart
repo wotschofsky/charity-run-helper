@@ -4,6 +4,7 @@ import 'package:velocity_x/velocity_x.dart';
 
 import './pages/home_page.dart';
 import './pages/auth_page.dart';
+import './pages/events/events_overview_page.dart';
 import './pages/not_found_page.dart';
 
 void main() {
@@ -27,6 +28,7 @@ class App extends StatelessWidget {
         routes: {
           '/': (uri, params) => MaterialPage(child: HomePage()),
           '/auth': (uri, params) => MaterialPage(child: AuthPage()),
+          '/events': (uri, params) => MaterialPage(child: EventsOverviewPage()),
         },
         notFoundPage: (uri, params) => MaterialPage(child: NotFoundPage()),
       ),
