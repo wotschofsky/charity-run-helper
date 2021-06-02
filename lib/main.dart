@@ -4,6 +4,7 @@ import 'package:velocity_x/velocity_x.dart';
 
 import './pages/home_page.dart';
 import './pages/auth_page.dart';
+import './pages/events/edit_event_page.dart';
 import './pages/events/event_details_page.dart';
 import './pages/events/events_overview_page.dart';
 import './pages/not_found_page.dart';
@@ -34,6 +35,7 @@ class App extends StatelessWidget {
             final id = uri.queryParameters['id'] as String;
             return MaterialPage(child: EventDetailsPage(id));
           },
+          '/events/new': (uri, params) => MaterialPage(child: EditEventPage()),
         },
         notFoundPage: (uri, params) => MaterialPage(child: NotFoundPage()),
       ),
