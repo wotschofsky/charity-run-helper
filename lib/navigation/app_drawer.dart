@@ -30,8 +30,7 @@ class _AppDrawerState extends State<AppDrawer> {
   }
 
   String get label {
-    if (FirebaseAuth.instance.currentUser == null ||
-        FirebaseAuth.instance.currentUser!.email == null) {
+    if (!signedIn) {
       return 'Welcome';
     }
     return FirebaseAuth.instance.currentUser!.email!;
@@ -53,7 +52,7 @@ class _AppDrawerState extends State<AppDrawer> {
             decoration: const BoxDecoration(
                 image: DecorationImage(
                     image: NetworkImage(
-                        'https://images.unsplash.com/photo-1590333748338-d629e4564ad9?w=500'),
+                        'https://images.unsplash.com/photo-1590333748338-d629e4564ad9?w=1000&q=40'),
                     fit: BoxFit.cover)),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -76,26 +75,26 @@ class _AppDrawerState extends State<AppDrawer> {
             ),
           ),
           ListTile(
-            leading: Icon(Icons.home),
-            title: Text('Home'),
+            leading: const Icon(Icons.home),
+            title: const Text('Home'),
             onTap: () => VxNavigator.of(context).replace(Uri(path: '/')),
           ),
           ListTile(
-            leading: Icon(Icons.calendar_today),
-            title: Text('Events'),
+            leading: const Icon(Icons.calendar_today),
+            title: const Text('Events'),
             onTap: () => VxNavigator.of(context).replace(Uri(path: '/events')),
           ),
-          Divider(),
+          const Divider(),
           if (!signedIn)
             ListTile(
-              leading: Icon(Icons.vpn_key),
-              title: Text('Login'),
+              leading: const Icon(Icons.vpn_key),
+              title: const Text('Login'),
               onTap: () => VxNavigator.of(context).push(Uri(path: '/auth')),
             )
           else
             ListTile(
-              leading: Icon(Icons.logout),
-              title: Text('Logout'),
+              leading: const Icon(Icons.logout),
+              title: const Text('Logout'),
               onTap: () => FirebaseAuth.instance.signOut(),
             ),
         ],

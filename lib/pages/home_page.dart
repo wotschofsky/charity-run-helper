@@ -7,20 +7,20 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Charity Run Helper'),
+          title: const Text('Charity Run Helper'),
         ),
         drawer: AppDrawer(),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('Welcome!', style: TextStyle(fontSize: 48)),
-              Padding(
+              const Text('Welcome!', style: TextStyle(fontSize: 48)),
+              const Padding(
                 padding: const EdgeInsets.only(top: 32),
                 child: Text(
                     'Get started by creating an event or signing up for one.',
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.grey, fontSize: 20)),
+                    style: const TextStyle(color: Colors.grey, fontSize: 20)),
               )
             ],
           ),

@@ -73,7 +73,7 @@ class AuthPage extends StatelessWidget {
               TextFormField(
                   controller: emailController,
                   decoration: const InputDecoration(
-                      border: OutlineInputBorder(), labelText: 'Email'),
+                      border: const OutlineInputBorder(), labelText: 'Email'),
                   validator: ValidationBuilder().email().build()),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 12),
@@ -81,7 +81,8 @@ class AuthPage extends StatelessWidget {
                     controller: passwordController,
                     obscureText: true,
                     decoration: const InputDecoration(
-                        border: OutlineInputBorder(), labelText: 'Password'),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Password'),
                     validator: ValidationBuilder().minLength(8).build()),
               ),
               Row(

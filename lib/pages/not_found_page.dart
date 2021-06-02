@@ -7,13 +7,13 @@ class NotFoundPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Charity Run Helper'),
+        title: const Text('Charity Run Helper'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ErrorMessage(
+            const ErrorMessage(
               message: 'Page not found',
             )
           ],
