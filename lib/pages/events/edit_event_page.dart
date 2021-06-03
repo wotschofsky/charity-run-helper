@@ -61,10 +61,43 @@ class _EditEventPageState extends State<EditEventPage> {
     }
   }
 
+  void delete(BuildContext context) {
+    FirebaseFirestore.instance.collection(('events')).doc(widget.id).delete();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text('New Event')),
+        appBar: AppBar(
+          title: const Text('New Event'),
+          actions: [
+            if (widget.id != null)
+              IconButton(
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (ctx) => AlertDialog(
+                              title: const Text('Are you sure?'),
+                              content: const Text(
+                                  'This event including all sign ups and sponsors will be lost forever!'),
+                              actions: [
+                                TextButton(
+                                    onPressed: () => Navigator.of(ctx).pop(),
+                                    child: const Text('Abort')),
+                                TextButton(
+                                    onPressed: () {
+                                      delete(context);
+                                      Navigator.of(context).pop();
+                                      VxNavigator.of(context)
+                                          .clearAndPush(Uri(path: '/events'));
+                                    },
+                                    child: const Text('Confirm')),
+                              ],
+                            ));
+                  },
+                  icon: Icon(Icons.delete_forever))
+          ],
+        ),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(16),
