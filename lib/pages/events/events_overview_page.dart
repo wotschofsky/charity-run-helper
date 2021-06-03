@@ -10,6 +10,7 @@ import '../../ui/error_message.dart';
 class EventsOverviewPage extends StatelessWidget {
   final _eventsStream = FirebaseFirestore.instance
       .collection('events')
+      .orderBy('startTime')
       .withConverter<Event>(
         fromFirestore: (snapshot, _) =>
             Event.fromJson({'id': snapshot.id, ...snapshot.data()!}),
