@@ -35,6 +35,13 @@ class App extends StatelessWidget {
             final id = uri.queryParameters['id'] as String;
             return MaterialPage(child: EventDetailsPage(id));
           },
+          '/events/edit': (uri, params) {
+            final id = uri.queryParameters['id'] as String;
+            return MaterialPage(
+                child: EditEventPage(
+              id: id,
+            ));
+          },
           '/events/new': (uri, params) => MaterialPage(child: EditEventPage()),
         },
         notFoundPage: (uri, params) => MaterialPage(child: NotFoundPage()),

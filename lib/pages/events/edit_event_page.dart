@@ -1,10 +1,16 @@
+import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_field/date_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:velocity_x/velocity_x.dart';
+
+import '../../models/event.dart';
+import '../../ui/error_message.dart';
 
 class EditEventPage extends StatefulWidget {
-  const EditEventPage({Key? key}) : super(key: key);
+  const EditEventPage({this.id});
+
+  final String? id;
 
   @override
   _EditEventPageState createState() => _EditEventPageState();
@@ -19,100 +25,178 @@ class _EditEventPageState extends State<EditEventPage> {
   DateTime? endTime;
 
   void submit(BuildContext ctx) async {
-    if (!_formKey.currentState!.validate() ||
-        startTime == null ||
-        endTime == null) {
-      return;
+    if (widget.id == null) {
+      if (!_formKey.currentState!.validate() ||
+          startTime == null ||
+          endTime == null) {
+        return;
+      }
+
+      final doc = await FirebaseFirestore.instance.collection('events').add({
+        'createdBy': FirebaseAuth.instance.currentUser!.uid,
+        'title': titleController.value.text,
+        'startTime': startTime,
+        'endTime': endTime,
+        'description': descriptionController.value.text,
+      });
+
+      VxNavigator.of(context)
+          .push(Uri(path: '/events/details', queryParameters: {'id': doc.id}));
+    } else {
+      if (!_formKey.currentState!.validate()) {
+        return;
+      }
+
+      await FirebaseFirestore.instance
+          .collection(('events'))
+          .doc(widget.id)
+          .update({
+        'title': titleController.value.text,
+        'startTime': startTime,
+        'endTime': endTime,
+        'description': descriptionController.value.text,
+      });
+
+      VxNavigator.of(context).pop();
     }
-
-    final doc = await FirebaseFirestore.instance.collection('events').add({
-      'createdBy': FirebaseAuth.instance.currentUser!.uid,
-      'title': titleController.value.text,
-      'startTime': startTime,
-      'endTime': endTime,
-      'description': descriptionController.value.text,
-    });
-
-    VxNavigator.of(context)
-        .push(Uri(path: '/events/details', queryParameters: {'id': doc.id}));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('New Event')),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: TextFormField(
-                    controller: titleController,
-                    decoration: const InputDecoration(
-                        border: const OutlineInputBorder(),
-                        labelText: 'Title',
-                        suffixIcon: Icon(Icons.title)),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: DateTimeFormField(
-                    firstDate: DateTime.now(),
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Start time',
-                      suffixIcon: Icon(Icons.event_note),
-                    ),
-                    mode: DateTimeFieldPickerMode.dateAndTime,
-                    onDateSelected: (date) {
-                      setState(() {
-                        startTime = date;
-                      });
+        appBar: AppBar(title: const Text('New Event')),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: widget.id == null
+                ? generateForm(context)
+                : FutureBuilder<DocumentSnapshot>(
+                    future: FirebaseFirestore.instance
+                        .collection('events')
+                        .doc(widget.id)
+                        .withConverter<Event>(
+                          fromFirestore: (snapshot, _) => Event.fromJson(
+                              {'id': snapshot.id, ...snapshot.data()!}),
+                          toFirestore: (event, _) => event.toJson(),
+                        )
+                        .get(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<DocumentSnapshot> snapshot) {
+                      if (snapshot.hasError) {
+                        return const Center(
+                          child: ErrorMessage(message: 'Something went wrong'),
+                        );
+                      }
+
+                      if (snapshot.data == null || !snapshot.data!.exists) {
+                        return const Center(
+                          child: ErrorMessage(message: 'Event not found'),
+                        );
+                      }
+
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        final data = snapshot.data!.data()! as Event;
+                        return generateForm(context,
+                            titleValue: data.title,
+                            startTimeValue: data.startTime,
+                            endTimeValue: data.endTime,
+                            descriptionValue: data.description);
+                      }
+
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
                     },
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: DateTimeFormField(
-                    firstDate: DateTime.now(),
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'End time',
-                      suffixIcon: Icon(Icons.event_note),
-                    ),
-                    mode: DateTimeFieldPickerMode.dateAndTime,
-                    onDateSelected: (date) {
-                      setState(() {
-                        endTime = date;
-                      });
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: TextFormField(
-                    controller: descriptionController,
-                    minLines: 5,
-                    maxLines: null,
-                    keyboardType: TextInputType.multiline,
-                    decoration: const InputDecoration(
-                        border: const OutlineInputBorder(),
-                        labelText: 'Description',
-                        helperText: 'Supports Markdown',
-                        suffixIcon: Icon(Icons.info)),
-                  ),
-                ),
-                ElevatedButton(
-                    onPressed: () => submit(context),
-                    child: Text('Create Event'))
-              ],
+          ),
+        ));
+  }
+
+  Form generateForm(BuildContext context,
+      {String? titleValue,
+      DateTime? startTimeValue,
+      DateTime? endTimeValue,
+      String? descriptionValue}) {
+    if (titleValue != null) {
+      titleController.text = titleValue;
+    }
+
+    if (startTimeValue != null) {
+      startTime = startTimeValue;
+    }
+
+    if (endTimeValue != null) {
+      endTime = endTimeValue;
+    }
+
+    if (descriptionValue != null) {
+      descriptionController.text = descriptionValue;
+    }
+
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: TextFormField(
+              controller: titleController,
+              decoration: const InputDecoration(
+                  border: const OutlineInputBorder(),
+                  labelText: 'Title',
+                  suffixIcon: Icon(Icons.title)),
             ),
           ),
-        ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: DateTimeFormField(
+              initialValue: startTimeValue,
+              firstDate: DateTime.now(),
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Start time',
+                suffixIcon: Icon(Icons.event_note),
+              ),
+              mode: DateTimeFieldPickerMode.dateAndTime,
+              onDateSelected: (date) {
+                startTime = date;
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: DateTimeFormField(
+              initialValue: endTimeValue,
+              firstDate: DateTime.now(),
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'End time',
+                suffixIcon: Icon(Icons.event_note),
+              ),
+              mode: DateTimeFieldPickerMode.dateAndTime,
+              onDateSelected: (date) {
+                endTime = date;
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: TextFormField(
+              controller: descriptionController,
+              minLines: 5,
+              maxLines: null,
+              keyboardType: TextInputType.multiline,
+              decoration: const InputDecoration(
+                  border: const OutlineInputBorder(),
+                  labelText: 'Description',
+                  helperText: 'Supports Markdown',
+                  suffixIcon: Icon(Icons.info)),
+            ),
+          ),
+          ElevatedButton(
+              onPressed: () => submit(context),
+              child: const Text('Create Event'))
+        ],
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:intl/intl.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 import '../../models/event.dart';
 import '../../ui/error_message.dart';
@@ -66,6 +67,11 @@ class EventDetailsPage extends StatelessWidget {
             appBar: AppBar(
               title: Text(data.title),
             ),
+            floatingActionButton: FloatingActionButton.extended(
+                onPressed: () => VxNavigator.of(context).push(Uri(
+                    path: '/events/edit', queryParameters: {'id': data.id})),
+                icon: const Icon(Icons.edit),
+                label: const Text('Edit')),
             body: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
