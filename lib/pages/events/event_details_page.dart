@@ -18,7 +18,15 @@ class EventDetailsPage extends StatelessWidget {
   String formatDuration(DateTime startTime, DateTime endTime) {
     final difference = startTime.difference(endTime).abs();
     final hours = difference.inMinutes / 60;
-    return '$hours hours';
+  }
+
+  void createRegistration() {
+    if (FirebaseAuth.instance.currentUser == null) {
+      return;
+    }
+
+    FirebaseFirestore.instance.collection('registrations').add(
+        {'eventId': id, 'runnerId': FirebaseAuth.instance.currentUser!.uid});
   }
 
   @override
@@ -99,18 +107,23 @@ class EventDetailsPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Row(
-                    children: [
-                      const Icon(Icons.timer, color: Colors.grey),
-                      Text(formatDuration(data.startTime, data.endTime),
-                          style: const TextStyle(color: Colors.grey)),
-                    ],
-                  ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 16, bottom: 8),
-                    child: ElevatedButton(
-                        onPressed: () {}, child: const Text('Register Now')),
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.timer, color: Colors.grey),
+                        Text(formatDuration(data.startTime, data.endTime),
+                            style: const TextStyle(color: Colors.grey)),
+                      ],
+                    ),
                   ),
+                  if (FirebaseAuth.instance.currentUser != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8, bottom: 8),
+                      child: ElevatedButton(
+                          onPressed: createRegistration,
+                          child: const Text('Register Now')),
+                    ),
                   Divider(),
                   Padding(
                     padding: const EdgeInsets.only(top: 8),
