@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import '../../models/event.dart';
+import '../../participations/participate_button.dart';
 import '../../ui/error_message.dart';
 import '../../ui/icon_info_item.dart';
 import '../../utils/build_snapshot.dart';
@@ -21,15 +22,6 @@ class EventDetailsPage extends StatelessWidget {
     final difference = startTime.difference(endTime).abs();
     final hours = difference.inMinutes / 60;
     return '${hours.toStringAsFixed(1)} hours';
-  }
-
-  void createParticipation() {
-    if (FirebaseAuth.instance.currentUser == null) {
-      return;
-    }
-
-    FirebaseFirestore.instance.collection('participations').add(
-        {'eventId': id, 'runnerId': FirebaseAuth.instance.currentUser!.uid});
   }
 
   @override
@@ -108,9 +100,7 @@ class EventDetailsPage extends StatelessWidget {
                       if (FirebaseAuth.instance.currentUser != null)
                         Padding(
                           padding: const EdgeInsets.only(top: 8, bottom: 8),
-                          child: ElevatedButton(
-                              onPressed: createParticipation,
-                              child: const Text('Participate')),
+                          child: ParticipateButton(id),
                         ),
                       Divider(),
                       Padding(
