@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../navigation/app_drawer.dart';
 import '../ui/error_message.dart';
 
 class NotFoundPage extends StatelessWidget {
@@ -9,6 +10,7 @@ class NotFoundPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Charity Run Helper'),
       ),
+      drawer: AppDrawer(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
