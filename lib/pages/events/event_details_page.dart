@@ -18,6 +18,7 @@ class EventDetailsPage extends StatelessWidget {
   String formatDuration(DateTime startTime, DateTime endTime) {
     final difference = startTime.difference(endTime).abs();
     final hours = difference.inMinutes / 60;
+    return '${hours.toStringAsFixed(1)} hours';
   }
 
   void createRegistration() {
