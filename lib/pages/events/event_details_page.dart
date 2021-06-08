@@ -7,6 +7,7 @@ import 'package:velocity_x/velocity_x.dart';
 
 import '../../models/event.dart';
 import '../../ui/error_message.dart';
+import '../../ui/icon_info_item.dart';
 
 class EventDetailsPage extends StatelessWidget {
   EventDetailsPage(this.id);
@@ -96,28 +97,16 @@ class EventDetailsPage extends StatelessWidget {
                     child:
                         Text(data.title, style: const TextStyle(fontSize: 32)),
                   ),
+                  IconInfoItem(
+                      icon: Icons.calendar_today,
+                      label:
+                          '${formatDate(data.startTime)} - ${formatDate(data.endTime)}'),
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.calendar_today, color: Colors.grey),
-                        Text(
-                          '${formatDate(data.startTime)} - ${formatDate(data.endTime)}',
-                          style: const TextStyle(color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.timer, color: Colors.grey),
-                        Text(formatDuration(data.startTime, data.endTime),
-                            style: const TextStyle(color: Colors.grey)),
-                      ],
-                    ),
-                  ),
+                      padding: const EdgeInsets.only(bottom: 4),
+                      child: IconInfoItem(
+                        icon: Icons.timer,
+                        label: formatDuration(data.startTime, data.endTime),
+                      )),
                   if (FirebaseAuth.instance.currentUser != null)
                     Padding(
                       padding: const EdgeInsets.only(top: 8, bottom: 8),

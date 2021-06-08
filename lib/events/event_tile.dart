@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import '../models/event.dart';
+import '../ui/icon_info_item.dart';
 
 class EventTile extends StatelessWidget {
   const EventTile(this.data);
@@ -28,19 +29,9 @@ class EventTile extends StatelessWidget {
                   style: TextStyle(fontSize: 24),
                 ),
               ),
-              Row(
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.only(right: 8),
-                    child: Icon(
-                      Icons.calendar_today,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  Text(DateFormat.yMd().format(data.startTime),
-                      style: const TextStyle(color: Colors.grey)),
-                ],
-              ),
+              IconInfoItem(
+                  icon: Icons.calendar_today,
+                  label: DateFormat.yMd().format(data.startTime)),
             ],
           ),
         ),
