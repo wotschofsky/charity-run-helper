@@ -7,6 +7,7 @@ import './pages/auth_page.dart';
 import './pages/events/edit_event_page.dart';
 import './pages/events/event_details_page.dart';
 import './pages/events/events_overview_page.dart';
+import './pages/registrations/registration_details_page.dart';
 import './pages/registrations/registrations_overview_page.dart';
 import './pages/not_found_page.dart';
 
@@ -46,6 +47,13 @@ class App extends StatelessWidget {
           '/events/new': (uri, params) => MaterialPage(child: EditEventPage()),
           '/registrations': (uri, params) =>
               MaterialPage(child: RegistrationsOverviewPage()),
+          '/registrations/view': (uri, params) {
+            final id = uri.queryParameters['id'] as String;
+            return MaterialPage(
+                child: RegistrationDetails(
+              id,
+            ));
+          },
         },
         notFoundPage: (uri, params) => MaterialPage(child: NotFoundPage()),
       ),
