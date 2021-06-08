@@ -7,6 +7,7 @@ import '../../events/event_tile.dart';
 import '../../models/event.dart';
 import '../../navigation/app_drawer.dart';
 import '../../ui/error_message.dart';
+import '../../utils/build_snapshot.dart';
 
 class EventsOverviewPage extends StatelessWidget {
   final _eventsStream = FirebaseFirestore.instance
@@ -38,35 +39,30 @@ class EventsOverviewPage extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: StreamBuilder<QuerySnapshot<Event>>(
             stream: _eventsStream,
-            builder: (BuildContext context,
-                AsyncSnapshot<QuerySnapshot<Event>> snapshot) {
-              if (snapshot.hasError) {
-                return const Center(
-                  child: ErrorMessage(),
-                );
-              }
-
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
+            builder: buildSnapshot(
+                childLoading: const Center(
                   child: CircularProgressIndicator(),
-                );
-              }
+                ),
+                childError: Center(
+                  child: ErrorMessage(),
+                ),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot<Event>> snapshot) {
+                  final docs =
+                      snapshot.data!.docs.map((doc) => doc.data()).toList();
 
-              final docs =
-                  snapshot.data!.docs.map((doc) => doc.data()).toList();
+                  if (docs.length == 0) {
+                    return const Center(
+                        child: ErrorMessage(message: 'No event available'));
+                  }
 
-              if (docs.length == 0) {
-                return const Center(
-                    child: ErrorMessage(message: 'No event available'));
-              }
-
-              return ListView.builder(
-                  itemCount: docs.length,
-                  itemBuilder: (ctx, index) {
-                    final doc = docs[index];
-                    return EventTile(doc);
-                  });
-            },
+                  return ListView.builder(
+                      itemCount: docs.length,
+                      itemBuilder: (ctx, index) {
+                        final doc = docs[index];
+                        return EventTile(doc);
+                      });
+                }),
           ),
         ));
   }

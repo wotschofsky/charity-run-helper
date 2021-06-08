@@ -6,6 +6,7 @@ import 'package:velocity_x/velocity_x.dart';
 
 import '../models/event.dart';
 import '../ui/error_message.dart';
+import '../utils/build_snapshot.dart';
 
 class ParticipationTile extends StatelessWidget {
   ParticipationTile({required this.id, required this.eventId});
@@ -30,19 +31,8 @@ class ParticipationTile extends StatelessWidget {
     return Card(
       child: StreamBuilder<DocumentSnapshot<Event>>(
         stream: dataStream,
-        builder: (BuildContext context,
-            AsyncSnapshot<DocumentSnapshot<Event>> snapshot) {
-          if (snapshot.hasError) {
-            return const Padding(
-              padding: EdgeInsets.all(8),
-              child: Center(
-                child: ErrorMessage(),
-              ),
-            );
-          }
-
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Padding(
+        builder: buildSnapshot(
+            childLoading: Padding(
               padding: const EdgeInsets.all(8),
               child: ListTile(
                 title: SkeletonAnimation(
@@ -60,32 +50,38 @@ class ParticipationTile extends StatelessWidget {
                   ),
                 ),
               ),
-            );
-          }
-
-          if (snapshot.data == null || !snapshot.data!.exists) {
-            return const Padding(
+            ),
+            childError: const Padding(
               padding: EdgeInsets.all(8),
               child: Center(
-                child: ErrorMessage(message: 'Event not found'),
-              ),
-            );
-          }
-
-          final data = snapshot.data!.data()!;
-
-          return InkWell(
-            onTap: () => VxNavigator.of(context).push(
-                Uri(path: '/participations/view', queryParameters: {'id': id})),
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: ListTile(
-                title: Text(data.title, style: TextStyle(fontSize: 20)),
-                subtitle: Text(formatDate(data.startTime)),
+                child: ErrorMessage(),
               ),
             ),
-          );
-        },
+            builder: (BuildContext context,
+                AsyncSnapshot<DocumentSnapshot<Event>> snapshot) {
+              if (!snapshot.data!.exists) {
+                return const Padding(
+                  padding: EdgeInsets.all(8),
+                  child: Center(
+                    child: ErrorMessage(message: 'Event not found'),
+                  ),
+                );
+              }
+
+              final data = snapshot.data!.data()!;
+
+              return InkWell(
+                onTap: () => VxNavigator.of(context).push(Uri(
+                    path: '/participations/view', queryParameters: {'id': id})),
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: ListTile(
+                    title: Text(data.title, style: TextStyle(fontSize: 20)),
+                    subtitle: Text(formatDate(data.startTime)),
+                  ),
+                ),
+              );
+            }),
       ),
     );
   }

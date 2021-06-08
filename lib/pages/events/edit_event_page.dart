@@ -6,6 +6,7 @@ import 'package:velocity_x/velocity_x.dart';
 
 import '../../models/event.dart';
 import '../../ui/error_message.dart';
+import '../../utils/build_snapshot.dart';
 
 class EditEventPage extends StatefulWidget {
   const EditEventPage({this.id});
@@ -67,6 +68,16 @@ class _EditEventPageState extends State<EditEventPage> {
 
   @override
   Widget build(BuildContext context) {
+    final eventFuture = FirebaseFirestore.instance
+        .collection('events')
+        .doc(widget.id)
+        .withConverter<Event>(
+          fromFirestore: (snapshot, _) =>
+              Event.fromJson({'id': snapshot.id, ...snapshot.data()!}),
+          toFirestore: (event, _) => event.toJson(),
+        )
+        .get();
+
     return Scaffold(
         appBar: AppBar(
           title: const Text('New Event'),
@@ -104,42 +115,29 @@ class _EditEventPageState extends State<EditEventPage> {
             child: widget.id == null
                 ? generateForm(context)
                 : FutureBuilder<DocumentSnapshot>(
-                    future: FirebaseFirestore.instance
-                        .collection('events')
-                        .doc(widget.id)
-                        .withConverter<Event>(
-                          fromFirestore: (snapshot, _) => Event.fromJson(
-                              {'id': snapshot.id, ...snapshot.data()!}),
-                          toFirestore: (event, _) => event.toJson(),
-                        )
-                        .get(),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<DocumentSnapshot> snapshot) {
-                      if (snapshot.hasError) {
-                        return const Center(
+                    future: eventFuture,
+                    builder: buildSnapshot<DocumentSnapshot<Event>>(
+                        childLoading: const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                        childError: const Center(
                           child: ErrorMessage(),
-                        );
-                      }
+                        ),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<DocumentSnapshot<Event>> snapshot) {
+                          if (!snapshot.data!.exists) {
+                            return const Center(
+                              child: ErrorMessage(message: 'Event not found'),
+                            );
+                          }
 
-                      if (snapshot.data == null || !snapshot.data!.exists) {
-                        return const Center(
-                          child: ErrorMessage(message: 'Event not found'),
-                        );
-                      }
-
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        final data = snapshot.data!.data()! as Event;
-                        return generateForm(context,
-                            titleValue: data.title,
-                            startTimeValue: data.startTime,
-                            endTimeValue: data.endTime,
-                            descriptionValue: data.description);
-                      }
-
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    },
+                          final data = snapshot.data!.data()!;
+                          return generateForm(context,
+                              titleValue: data.title,
+                              startTimeValue: data.startTime,
+                              endTimeValue: data.endTime,
+                              descriptionValue: data.description);
+                        }),
                   ),
           ),
         ));

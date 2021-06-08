@@ -6,6 +6,7 @@ import '../../models/participation.dart';
 import '../../navigation/app_drawer.dart';
 import '../../participations/participation_tile.dart';
 import '../../ui/error_message.dart';
+import '../../utils/build_snapshot.dart';
 
 class ParticipationsOverviewPage extends StatelessWidget {
   final participationsStream = FirebaseFirestore.instance
@@ -29,34 +30,31 @@ class ParticipationsOverviewPage extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: StreamBuilder<QuerySnapshot<Participation>>(
           stream: participationsStream,
-          builder: (BuildContext context,
-              AsyncSnapshot<QuerySnapshot<Participation>> snapshot) {
-            if (snapshot.hasError) {
-              return const Center(
-                child: ErrorMessage(),
-              );
-            }
-
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
+          builder: buildSnapshot(
+              childLoading: const Center(
                 child: CircularProgressIndicator(),
-              );
-            }
+              ),
+              childError: const Center(
+                child: ErrorMessage(),
+              ),
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot<Participation>> snapshot) {
+                final docs =
+                    snapshot.data!.docs.map((doc) => doc.data()).toList();
 
-            final docs = snapshot.data!.docs.map((doc) => doc.data()).toList();
+                if (docs.length == 0) {
+                  return const Center(
+                      child: ErrorMessage(message: 'No participations found'));
+                }
 
-            if (docs.length == 0) {
-              return const Center(
-                  child: ErrorMessage(message: 'No participations found'));
-            }
-
-            return ListView.builder(
-                itemCount: docs.length,
-                itemBuilder: (ctx, index) {
-                  final doc = docs[index];
-                  return ParticipationTile(id: doc.id, eventId: doc.eventId);
-                });
-          },
+                return ListView.builder(
+                    itemCount: docs.length,
+                    itemBuilder: (ctx, index) {
+                      final doc = docs[index];
+                      return ParticipationTile(
+                          id: doc.id, eventId: doc.eventId);
+                    });
+              }),
         ),
       ),
     );
