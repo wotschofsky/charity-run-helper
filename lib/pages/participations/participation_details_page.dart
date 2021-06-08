@@ -1,49 +1,50 @@
+import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:sr_helper/models/event.dart';
-import 'package:sr_helper/models/registration.dart';
-import 'package:sr_helper/ui/error_message.dart';
-import 'package:sr_helper/ui/icon_info_item.dart';
-import 'package:sr_helper/utils/build_snapshot.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-class RegistrationDetails extends StatelessWidget {
-  RegistrationDetails(this.id);
+import '../../models/event.dart';
+import '../../models/participation.dart';
+import '../../ui/error_message.dart';
+import '../../ui/icon_info_item.dart';
+import '../../utils/build_snapshot.dart';
+
+class ParticipationDetails extends StatelessWidget {
+  ParticipationDetails(this.id);
 
   final String id;
 
   @override
   Widget build(BuildContext context) {
-    final registrationStream = FirebaseFirestore.instance
-        .collection('registrations')
+    final participationSteam = FirebaseFirestore.instance
+        .collection('participations')
         .doc(id)
-        .withConverter<Registration>(
+        .withConverter<Participation>(
           fromFirestore: (snapshot, _) =>
-              Registration.fromJson({'id': snapshot.id, ...snapshot.data()!}),
+              Participation.fromJson({'id': snapshot.id, ...snapshot.data()!}),
           toFirestore: (event, _) => event.toJson(),
         )
         .snapshots();
 
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Registration'),
+          title: const Text('Participation'),
         ),
         body: StreamBuilder(
-          stream: registrationStream,
-          builder: buildSnapshot<DocumentSnapshot<Registration>>(
+          stream: participationSteam,
+          builder: buildSnapshot<DocumentSnapshot<Participation>>(
               childLoading: const Center(
                 child: CircularProgressIndicator(),
               ),
               childError: const Center(
-                child: ErrorMessage(message: 'Failed loading registration!'),
+                child: ErrorMessage(message: 'Failed loading participation!'),
               ),
               builder: (context, snapshot) {
-                final registrationData = snapshot.data!.data()!;
+                final participationData = snapshot.data!.data()!;
 
                 final eventStream = FirebaseFirestore.instance
                     .collection('events')
-                    .doc(registrationData.eventId)
+                    .doc(participationData.eventId)
                     .withConverter<Event>(
                       fromFirestore: (snapshot, _) => Event.fromJson(
                           {'id': snapshot.id, ...snapshot.data()!}),
@@ -83,7 +84,7 @@ class RegistrationDetails extends StatelessWidget {
                                                     Uri(
                                                         path: '/events/details',
                                                         queryParameters: {
-                                                      'id': registrationData
+                                                      'id': participationData
                                                           .eventId
                                                     })),
                                             icon: const Icon(Icons.info,

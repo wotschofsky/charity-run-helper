@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../../models/registration.dart';
+import '../../models/participation.dart';
 import '../../navigation/app_drawer.dart';
-import '../../registrations/registration_tile.dart';
+import '../../participations/participation_tile.dart';
 import '../../ui/error_message.dart';
 
-class RegistrationsOverviewPage extends StatelessWidget {
-  final _registrationsStream = FirebaseFirestore.instance
-      .collection('registrations')
+class ParticipationsOverviewPage extends StatelessWidget {
+  final participationsStream = FirebaseFirestore.instance
+      .collection('participations')
       .where('runnerId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-      .withConverter<Registration>(
+      .withConverter<Participation>(
         fromFirestore: (snapshot, _) =>
-            Registration.fromJson({'id': snapshot.id, ...snapshot.data()!}),
+            Participation.fromJson({'id': snapshot.id, ...snapshot.data()!}),
         toFirestore: (event, _) => event.toJson(),
       )
       .snapshots();
@@ -22,15 +22,15 @@ class RegistrationsOverviewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Your Registrations'),
+        title: Text('Your Participations'),
       ),
       drawer: AppDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: StreamBuilder<QuerySnapshot<Registration>>(
-          stream: _registrationsStream,
+        child: StreamBuilder<QuerySnapshot<Participation>>(
+          stream: participationsStream,
           builder: (BuildContext context,
-              AsyncSnapshot<QuerySnapshot<Registration>> snapshot) {
+              AsyncSnapshot<QuerySnapshot<Participation>> snapshot) {
             if (snapshot.hasError) {
               return const Center(
                 child: ErrorMessage(),
@@ -47,14 +47,14 @@ class RegistrationsOverviewPage extends StatelessWidget {
 
             if (docs.length == 0) {
               return const Center(
-                  child: ErrorMessage(message: 'No registrations found'));
+                  child: ErrorMessage(message: 'No participations found!'));
             }
 
             return ListView.builder(
                 itemCount: docs.length,
                 itemBuilder: (ctx, index) {
                   final doc = docs[index];
-                  return RegistrationTile(id: doc.id, eventId: doc.eventId);
+                  return ParticipationTile(id: doc.id, eventId: doc.eventId);
                 });
           },
         ),

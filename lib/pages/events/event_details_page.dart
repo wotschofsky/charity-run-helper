@@ -22,12 +22,12 @@ class EventDetailsPage extends StatelessWidget {
     return '${hours.toStringAsFixed(1)} hours';
   }
 
-  void createRegistration() {
+  void createParticipation() {
     if (FirebaseAuth.instance.currentUser == null) {
       return;
     }
 
-    FirebaseFirestore.instance.collection('registrations').add(
+    FirebaseFirestore.instance.collection('participations').add(
         {'eventId': id, 'runnerId': FirebaseAuth.instance.currentUser!.uid});
   }
 
@@ -111,8 +111,8 @@ class EventDetailsPage extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(top: 8, bottom: 8),
                       child: ElevatedButton(
-                          onPressed: createRegistration,
-                          child: const Text('Register Now')),
+                          onPressed: createParticipation,
+                          child: const Text('Participate')),
                     ),
                   Divider(),
                   Padding(

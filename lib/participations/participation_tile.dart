@@ -7,8 +7,8 @@ import 'package:velocity_x/velocity_x.dart';
 import '../models/event.dart';
 import '../ui/error_message.dart';
 
-class RegistrationTile extends StatelessWidget {
-  RegistrationTile({required this.id, required this.eventId});
+class ParticipationTile extends StatelessWidget {
+  ParticipationTile({required this.id, required this.eventId});
 
   final String id;
   final String eventId;
@@ -36,7 +36,7 @@ class RegistrationTile extends StatelessWidget {
             return const Padding(
               padding: EdgeInsets.all(8),
               child: Center(
-                child: ErrorMessage(message: 'Failed loading registration!'),
+                child: ErrorMessage(message: 'Failed loading participation!'),
               ),
             );
           }
@@ -76,7 +76,7 @@ class RegistrationTile extends StatelessWidget {
 
           return InkWell(
             onTap: () => VxNavigator.of(context).push(
-                Uri(path: '/registrations/view', queryParameters: {'id': id})),
+                Uri(path: '/participations/view', queryParameters: {'id': id})),
             child: Padding(
               padding: const EdgeInsets.all(8),
               child: ListTile(
