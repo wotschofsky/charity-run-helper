@@ -37,7 +37,7 @@ class ParticipationDetails extends StatelessWidget {
                 child: CircularProgressIndicator(),
               ),
               childError: const Center(
-                child: ErrorMessage(message: 'Failed loading participation!'),
+                child: ErrorMessage(),
               ),
               builder: (context, snapshot) {
                 final participationData = snapshot.data!.data()!;
@@ -59,8 +59,7 @@ class ParticipationDetails extends StatelessWidget {
                           child: CircularProgressIndicator(),
                         ),
                         childError: const Center(
-                          child: ErrorMessage(
-                              message: 'Failed loading related event!'),
+                          child: ErrorMessage(),
                         ),
                         builder: (context, snapshot) {
                           final eventData = snapshot.data!.data()!;

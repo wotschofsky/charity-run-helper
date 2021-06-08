@@ -47,7 +47,7 @@ class ParticipationsOverviewPage extends StatelessWidget {
 
             if (docs.length == 0) {
               return const Center(
-                  child: ErrorMessage(message: 'No participations found!'));
+                  child: ErrorMessage(message: 'No participations found'));
             }
 
             return ListView.builder(

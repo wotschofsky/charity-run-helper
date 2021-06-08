@@ -36,7 +36,7 @@ class ParticipationTile extends StatelessWidget {
             return const Padding(
               padding: EdgeInsets.all(8),
               child: Center(
-                child: ErrorMessage(message: 'Failed loading participation!'),
+                child: ErrorMessage(),
               ),
             );
           }
@@ -67,7 +67,7 @@ class ParticipationTile extends StatelessWidget {
             return const Padding(
               padding: EdgeInsets.all(8),
               child: Center(
-                child: ErrorMessage(message: 'Event not found!'),
+                child: ErrorMessage(message: 'Event not found'),
               ),
             );
           }

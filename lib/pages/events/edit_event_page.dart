@@ -117,7 +117,7 @@ class _EditEventPageState extends State<EditEventPage> {
                         AsyncSnapshot<DocumentSnapshot> snapshot) {
                       if (snapshot.hasError) {
                         return const Center(
-                          child: ErrorMessage(message: 'Something went wrong'),
+                          child: ErrorMessage(),
                         );
                       }
 
