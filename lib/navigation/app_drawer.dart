@@ -84,6 +84,12 @@ class _AppDrawerState extends State<AppDrawer> {
             title: const Text('Events'),
             onTap: () => VxNavigator.of(context).replace(Uri(path: '/events')),
           ),
+          ListTile(
+            leading: const Icon(Icons.check),
+            title: const Text('Registrations'),
+            onTap: () =>
+                VxNavigator.of(context).replace(Uri(path: '/registrations')),
+          ),
           const Divider(),
           if (!signedIn)
             ListTile(
