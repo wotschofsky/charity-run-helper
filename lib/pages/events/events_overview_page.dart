@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import '../../events/event_tile.dart';
@@ -25,12 +26,14 @@ class EventsOverviewPage extends StatelessWidget {
           title: const Text('All Events'),
         ),
         drawer: AppDrawer(),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () =>
-              VxNavigator.of(context).push(Uri(path: '/events/new')),
-          icon: const Icon(Icons.add),
-          label: const Text('New'),
-        ),
+        floatingActionButton: FirebaseAuth.instance.currentUser != null
+            ? FloatingActionButton.extended(
+                onPressed: () =>
+                    VxNavigator.of(context).push(Uri(path: '/events/new')),
+                icon: const Icon(Icons.add),
+                label: const Text('New'),
+              )
+            : null,
         body: Padding(
           padding: const EdgeInsets.all(16),
           child: StreamBuilder<QuerySnapshot<Event>>(

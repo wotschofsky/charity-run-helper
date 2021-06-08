@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -67,11 +68,15 @@ class EventDetailsPage extends StatelessWidget {
             appBar: AppBar(
               title: Text(data.title),
             ),
-            floatingActionButton: FloatingActionButton.extended(
-                onPressed: () => VxNavigator.of(context).push(Uri(
-                    path: '/events/edit', queryParameters: {'id': data.id})),
-                icon: const Icon(Icons.edit),
-                label: const Text('Edit')),
+            floatingActionButton: FirebaseAuth.instance.currentUser != null &&
+                    FirebaseAuth.instance.currentUser!.uid == data.createdBy
+                ? FloatingActionButton.extended(
+                    onPressed: () => VxNavigator.of(context).push(Uri(
+                        path: '/events/edit',
+                        queryParameters: {'id': data.id})),
+                    icon: const Icon(Icons.edit),
+                    label: const Text('Edit'))
+                : null,
             body: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
