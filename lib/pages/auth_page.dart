@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:form_validator/form_validator.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -72,6 +73,7 @@ class AuthPage extends StatelessWidget {
             children: <Widget>[
               TextFormField(
                   controller: emailController,
+                  keyboardType: TextInputType.emailAddress,
                   decoration: const InputDecoration(
                       border: const OutlineInputBorder(), labelText: 'Email'),
                   validator: ValidationBuilder().email().build()),
