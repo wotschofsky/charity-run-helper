@@ -114,7 +114,7 @@ class _EditEventPageState extends State<EditEventPage> {
             padding: const EdgeInsets.all(16),
             child: widget.id == null
                 ? generateForm(context)
-                : FutureBuilder<DocumentSnapshot>(
+                : FutureBuilder<DocumentSnapshot<Event>>(
                     future: eventFuture,
                     builder: buildSnapshot<DocumentSnapshot<Event>>(
                         childLoading: const Center(
