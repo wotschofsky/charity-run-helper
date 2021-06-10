@@ -5,6 +5,7 @@ import 'package:velocity_x/velocity_x.dart';
 
 import '../../models/event.dart';
 import '../../models/participation.dart';
+import '../../sponsors/edit_sponsor.dart';
 import '../../ui/error_message.dart';
 import '../../ui/icon_info_item.dart';
 import '../../utils/build_snapshot.dart';
@@ -13,6 +14,15 @@ class ParticipationDetails extends StatelessWidget {
   ParticipationDetails(this.id);
 
   final String id;
+
+  void showSponsorDialog(BuildContext ctx, String eventId) {
+    showModalBottomSheet(
+        context: ctx,
+        builder: (ctx) => EditSponsor(
+              eventId: eventId,
+              participationId: id,
+            ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,10 +118,22 @@ class ParticipationDetails extends StatelessWidget {
                                       icon: Icons.monetization_on,
                                       label: 'n €'),
                                   const Divider(),
-                                  const Padding(
+                                  Padding(
                                     padding: const EdgeInsets.only(bottom: 12),
-                                    child: Text('Sponsors',
-                                        style: const TextStyle(fontSize: 24)),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text('Sponsors',
+                                            style:
+                                                const TextStyle(fontSize: 24)),
+                                        TextButton(
+                                            onPressed: () => showSponsorDialog(
+                                                context,
+                                                participationData.eventId),
+                                            child: Text('Add Sponsor'))
+                                      ],
+                                    ),
                                   ),
                                   ...List.filled(3, null)
                                       .map((e) => const Padding(
