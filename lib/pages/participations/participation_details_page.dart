@@ -5,7 +5,9 @@ import 'package:velocity_x/velocity_x.dart';
 
 import '../../models/event.dart';
 import '../../models/participation.dart';
+import '../../models/sponsor.dart';
 import '../../sponsors/edit_sponsor.dart';
+import '../../sponsors/sponsor_tile.dart';
 import '../../ui/error_message.dart';
 import '../../ui/icon_info_item.dart';
 import '../../utils/build_snapshot.dart';
@@ -74,6 +76,23 @@ class ParticipationDetails extends StatelessWidget {
                         builder: (context, snapshot) {
                           final eventData = snapshot.data!.data()!;
 
+                          final sponsorsStream = FirebaseFirestore.instance
+                              .collection('sponsors')
+                              .where('runnerId',
+                                  isEqualTo:
+                                      FirebaseAuth.instance.currentUser!.uid)
+                              .where('participationId',
+                                  isEqualTo: participationData.id)
+                              .withConverter<Sponsor>(
+                                fromFirestore: (snapshot, _) =>
+                                    Sponsor.fromJson({
+                                  'id': snapshot.id,
+                                  ...snapshot.data()!
+                                }),
+                                toFirestore: (event, _) => event.toJson(),
+                              )
+                              .snapshots();
+
                           return SingleChildScrollView(
                             child: Padding(
                               padding: const EdgeInsets.all(16),
@@ -135,15 +154,37 @@ class ParticipationDetails extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-                                  ...List.filled(3, null)
-                                      .map((e) => const Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 8),
-                                            child: Placeholder(
-                                              fallbackHeight: 100,
-                                            ),
-                                          ))
-                                      .toList()
+                                  StreamBuilder(
+                                      stream: sponsorsStream,
+                                      builder: buildSnapshot<
+                                              QuerySnapshot<Sponsor>>(
+                                          childLoading: Center(
+                                              child:
+                                                  CircularProgressIndicator()),
+                                          childError:
+                                              Center(child: ErrorMessage()),
+                                          builder: (ctx, snapshot) {
+                                            final docs = snapshot.data!.docs
+                                                .map((doc) => doc.data())
+                                                .toList();
+
+                                            if (docs.length == 0) {
+                                              return Center(
+                                                  child: Text(
+                                                      'No sponsor found! Get started by adding one.',
+                                                      style: TextStyle(
+                                                          color: Colors.grey)));
+                                            }
+
+                                            return Column(
+                                              children: docs
+                                                  .map((s) => SponsorTile(
+                                                      name:
+                                                          '${s.firstName} ${s.lastName}',
+                                                      amount: s.amount))
+                                                  .toList(),
+                                            );
+                                          }))
                                 ],
                               ),
                             ),
