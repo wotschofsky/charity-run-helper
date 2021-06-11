@@ -18,7 +18,8 @@ class ParticipateButton extends StatelessWidget {
 
     FirebaseFirestore.instance.collection('participations').add({
       'eventId': eventId,
-      'runnerId': FirebaseAuth.instance.currentUser!.uid
+      'runnerId': FirebaseAuth.instance.currentUser!.uid,
+      'totalDistance': 0.0
     });
   }
 

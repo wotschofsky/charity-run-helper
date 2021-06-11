@@ -9,6 +9,7 @@ import './pages/events/event_details_page.dart';
 import './pages/events/events_overview_page.dart';
 import './pages/participations/participation_details_page.dart';
 import './pages/participations/participations_overview_page.dart';
+import './pages/tracker_page.dart';
 import './pages/not_found_page.dart';
 
 void main() {
@@ -54,6 +55,7 @@ class App extends StatelessWidget {
               id,
             ));
           },
+          '/tracker': (uri, params) => MaterialPage(child: TrackerPage()),
         },
         notFoundPage: (uri, params) => MaterialPage(child: NotFoundPage()),
       ),

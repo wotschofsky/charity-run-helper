@@ -90,6 +90,11 @@ class _AppDrawerState extends State<AppDrawer> {
             onTap: () =>
                 VxNavigator.of(context).replace(Uri(path: '/participations')),
           ),
+          ListTile(
+            leading: const Icon(Icons.timer),
+            title: const Text('Tracker'),
+            onTap: () => VxNavigator.of(context).replace(Uri(path: '/tracker')),
+          ),
           const Divider(),
           if (!signedIn)
             ListTile(
