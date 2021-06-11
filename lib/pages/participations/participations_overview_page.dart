@@ -30,15 +30,14 @@ class ParticipationsOverviewPage extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: StreamBuilder<QuerySnapshot<Participation>>(
           stream: participationsStream,
-          builder: buildSnapshot(
+          builder: buildSnapshot<QuerySnapshot<Participation>>(
               childLoading: const Center(
                 child: CircularProgressIndicator(),
               ),
               childError: const Center(
                 child: ErrorMessage(),
               ),
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot<Participation>> snapshot) {
+              builder: (context, snapshot) {
                 final docs =
                     snapshot.data!.docs.map((doc) => doc.data()).toList();
 
