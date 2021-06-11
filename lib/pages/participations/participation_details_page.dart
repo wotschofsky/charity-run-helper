@@ -26,6 +26,10 @@ class ParticipationDetails extends StatelessWidget {
             ));
   }
 
+  void delete(BuildContext context) {
+    FirebaseFirestore.instance.collection(('participations')).doc(id).delete();
+  }
+
   @override
   Widget build(BuildContext context) {
     final participationSteam = FirebaseFirestore.instance
@@ -41,6 +45,32 @@ class ParticipationDetails extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: const Text('Participation'),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                            title: const Text('Are you sure?'),
+                            content: const Text(
+                                'Your participation for this event will be undone and all your progress and sponsors will be lost!'),
+                            actions: [
+                              TextButton(
+                                  onPressed: () => Navigator.of(ctx).pop(),
+                                  child: const Text('Abort')),
+                              TextButton(
+                                  onPressed: () {
+                                    delete(context);
+                                    Navigator.of(context).pop();
+                                    VxNavigator.of(context).clearAndPush(
+                                        Uri(path: '/participations'));
+                                  },
+                                  child: const Text('Confirm')),
+                            ],
+                          ));
+                },
+                icon: Icon(Icons.delete_forever))
+          ],
         ),
         body: StreamBuilder(
           stream: participationSteam,
