@@ -50,3 +50,7 @@ export const getNodemailerTransport = (): nodemailer.Transporter => {
 
   return nodemailerTransport;
 };
+
+export const roundFloor = (input: number, fractionDigits: number): number =>
+  Math.floor(input * Math.pow(10, fractionDigits)) /
+  Math.pow(10, fractionDigits);

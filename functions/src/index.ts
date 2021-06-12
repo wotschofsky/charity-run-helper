@@ -176,3 +176,41 @@ export const sendSponsorLink = functions
       }`,
     });
   });
+
+export const sendReceipt = functions
+  .region(DEFAULT_REGION)
+  .firestore.document('sponsors/{pointId}')
+  .onUpdate(async (change) => {
+    const dataBefore = change.before.data();
+    const dataAfter = change.after.data();
+
+    // Cancel if update didn't complete payment
+    if (!(!dataBefore.paymentComplete && dataAfter.paymentComplete)) {
+      return;
+    }
+
+    const [eventDoc, participationDoc] = await Promise.all([
+      eventsCollection.doc(dataAfter.eventId).get(),
+      participationsCollection.doc(dataAfter.participationId).get(),
+    ]);
+
+    const eventData = eventDoc.data();
+    const participationData = participationDoc.data();
+
+    if (!eventData || !participationData) {
+      return;
+    }
+
+    const finalAmount = (
+      dataAfter.amount * utils.roundFloor(participationData.totalDistance, 1)
+    ).toFixed(2);
+
+    const transporter = utils.getNodemailerTransport();
+
+    await transporter.sendMail({
+      from: `"${eventData.title}" <${eventDoc.id}@cr-helper.felisk.io>`,
+      to: `"${dataAfter.firstName} ${dataAfter.lastName}" ${dataAfter.email}`,
+      subject: 'Thank you for your donation!',
+      text: `Hi ${dataAfter.firstName},\nthank you for donating during ${finalAmount}€ our ${eventData.title} event!`,
+    });
+  });
