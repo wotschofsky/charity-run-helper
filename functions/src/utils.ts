@@ -1,3 +1,6 @@
+import * as functions from 'firebase-functions';
+import * as nodemailer from 'nodemailer';
+
 // Based on https://stackoverflow.com/a/365853/12475254
 
 export const degreesToRadians = (degrees: number): number =>
@@ -26,4 +29,24 @@ export const distanceInKmBetweenEarthCoordinates = (
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
   return earthRadiusKm * c;
+};
+
+let nodemailerTransport: nodemailer.Transporter | null = null;
+
+export const getNodemailerTransport = (): nodemailer.Transporter => {
+  if (nodemailerTransport) {
+    return nodemailerTransport;
+  }
+
+  nodemailerTransport = nodemailer.createTransport({
+    host: 'email-smtp.eu-central-1.amazonaws.com',
+    port: 465,
+    secure: true,
+    auth: {
+      user: functions.config().ses.user,
+      pass: functions.config().ses.password,
+    },
+  });
+
+  return nodemailerTransport;
 };

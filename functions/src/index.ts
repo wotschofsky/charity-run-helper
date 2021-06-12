@@ -147,3 +147,30 @@ export const processPayment = functions.https.onCall(async (data) => {
     paymentComplete: true,
   });
 });
+
+export const sendSponsorLink = functions
+  .region(DEFAULT_REGION)
+  .firestore.document('sponsors/{pointId}')
+  .onCreate(async (snapshot) => {
+    const sponsorData = snapshot.data();
+
+    const eventDoc = await eventsCollection.doc(sponsorData.eventId).get();
+    const eventData = eventDoc.data();
+
+    if (!eventData) {
+      return;
+    }
+
+    const transporter = utils.getNodemailerTransport();
+
+    await transporter.sendMail({
+      from: `"${eventData.title}" <${eventDoc.id}@cr-helper.felisk.io>`,
+      to: `"${sponsorData.firstName} ${sponsorData.lastName}" ${sponsorData.email}`,
+      subject: `Your personal sponsor link for ${eventData.title}`,
+      text: `Hi ${sponsorData.firstName},\nyour personal sponsor link for the ${
+        eventData.title
+      } event is ${functions.config().hosting['base-url']}/sponsors/info?id=${
+        snapshot.id
+      }`,
+    });
+  });
