@@ -19,8 +19,8 @@ class _PaymentButtonState extends State<PaymentButton> {
       isProcessing = true;
     });
 
-    final processPayment =
-        FirebaseFunctions.instance.httpsCallable('processPayment');
+    final processPayment = FirebaseFunctions.instanceFor(region: 'europe-west3')
+        .httpsCallable('processPayment');
     await processPayment({'sponsorId': widget.sponsorId});
 
     setState(() {

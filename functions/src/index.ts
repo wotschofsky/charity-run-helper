@@ -140,13 +140,15 @@ export const calculateDistance = functions
     });
   });
 
-export const processPayment = functions.https.onCall(async (data) => {
-  const { sponsorId } = data;
+export const processPayment = functions
+  .region(DEFAULT_REGION)
+  .https.onCall(async (data) => {
+    const { sponsorId } = data;
 
-  await sponsorsCollection.doc(sponsorId).update({
-    paymentComplete: true,
+    await sponsorsCollection.doc(sponsorId).update({
+      paymentComplete: true,
+    });
   });
-});
 
 export const sendSponsorLink = functions
   .region(DEFAULT_REGION)
