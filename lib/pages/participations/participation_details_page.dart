@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:sr_helper/utils/custom_math.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import '../../models/event.dart';
@@ -161,11 +162,14 @@ class ParticipationDetails extends StatelessWidget {
                                     child: Text('Your Progress',
                                         style: const TextStyle(fontSize: 24)),
                                   ),
-                                  const IconInfoItem(
-                                      icon: Icons.map, label: 'n km'),
-                                  const IconInfoItem(
+                                  IconInfoItem(
+                                      icon: Icons.map,
+                                      label:
+                                          '${roundFloor(participationData.totalDistance, 1)} km'),
+                                  IconInfoItem(
                                       icon: Icons.monetization_on,
-                                      label: 'n €'),
+                                      label:
+                                          '${(participationData.sponsorsSum * roundFloor(participationData.totalDistance, 1)).toStringAsFixed(2)} €'),
                                   const Divider(),
                                   Padding(
                                     padding: const EdgeInsets.only(bottom: 12),

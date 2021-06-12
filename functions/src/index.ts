@@ -79,6 +79,30 @@ export const participationsCleanUp = functions
     });
   });
 
+export const calculateSponsorsSum = functions
+  .region(DEFAULT_REGION)
+  .firestore.document('sponsors/{sponsorId}')
+  .onWrite(async (change) => {
+    const docData = change.after.data();
+
+    if (!docData) {
+      return;
+    }
+
+    const sponsorsQuery = await sponsorsCollection
+      .where('participationId', '==', docData.participationId)
+      .get();
+
+    let sum = 0;
+    sponsorsQuery.forEach((doc) => {
+      sum += doc.data().amount;
+    });
+
+    await participationsCollection.doc(docData.participationId).update({
+      sponsorsSum: sum,
+    });
+  });
+
 export const calculateDistance = functions
   .region(DEFAULT_REGION)
   .firestore.document('geopoints/{pointId}')
