@@ -66,12 +66,19 @@ class _ParticipationSelectorState extends State<ParticipationSelector> {
     });
   }
 
+  String get labelText {
+    if (loaded) {
+      return 'Select Event';
+    }
+    return 'Loading Events...';
+  }
+
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField(
         onChanged: dropdownItems.length == 0 ? null : widget.onChanged,
-        decoration: const InputDecoration(
-            border: const OutlineInputBorder(), labelText: 'Select Event'),
+        decoration: InputDecoration(
+            border: const OutlineInputBorder(), labelText: labelText),
         items: dropdownItems);
   }
 }
