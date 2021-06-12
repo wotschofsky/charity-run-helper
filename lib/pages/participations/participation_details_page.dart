@@ -209,6 +209,7 @@ class ParticipationDetails extends StatelessWidget {
                                             return Column(
                                               children: docs
                                                   .map((s) => SponsorTile(
+                                                      id: s.id,
                                                       name:
                                                           '${s.firstName} ${s.lastName}',
                                                       amount: s.amount))
