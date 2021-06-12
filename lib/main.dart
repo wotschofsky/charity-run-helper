@@ -9,6 +9,7 @@ import './pages/events/event_details_page.dart';
 import './pages/events/events_overview_page.dart';
 import './pages/participations/participation_details_page.dart';
 import './pages/participations/participations_overview_page.dart';
+import './pages/sponsors/sponsor_info_page.dart';
 import './pages/tracker_page.dart';
 import './pages/not_found_page.dart';
 
@@ -52,6 +53,13 @@ class App extends StatelessWidget {
             final id = uri.queryParameters['id'] as String;
             return MaterialPage(
                 child: ParticipationDetails(
+              id,
+            ));
+          },
+          '/sponsors/info': (uri, params) {
+            final id = uri.queryParameters['id'] as String;
+            return MaterialPage(
+                child: SponsorInfoPage(
               id,
             ));
           },

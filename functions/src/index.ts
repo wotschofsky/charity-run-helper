@@ -139,3 +139,11 @@ export const calculateDistance = functions
       totalDistance,
     });
   });
+
+export const processPayment = functions.https.onCall(async (data) => {
+  const { sponsorId } = data;
+
+  await sponsorsCollection.doc(sponsorId).update({
+    paymentComplete: true,
+  });
+});

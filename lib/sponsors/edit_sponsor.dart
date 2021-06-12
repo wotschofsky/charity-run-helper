@@ -42,6 +42,7 @@ class _EditSponsorState extends State<EditSponsor> {
       'address': addressController.text,
       'zip': zipController.text,
       'city': cityController.text,
+      'paymentComplete': false,
     });
   }
 
