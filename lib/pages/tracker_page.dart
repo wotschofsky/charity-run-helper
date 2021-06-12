@@ -10,6 +10,7 @@ import '../navigation/app_drawer.dart';
 import '../participations/participation_selector.dart';
 import '../ui/error_message.dart';
 import '../utils/build_snapshot.dart';
+import '../utils/custom_math.dart';
 
 class TrackerPage extends StatefulWidget {
   @override
@@ -132,7 +133,7 @@ class _TrackerPageState extends State<TrackerPage> {
                                       fontSize: 20, color: Colors.grey)),
                             ),
                             Text(
-                              '${data.totalDistance.toStringAsFixed(3)} km',
+                              '${roundFloor(data.totalDistance, 1)} km',
                               style: const TextStyle(fontSize: 64),
                             ),
                           ],
