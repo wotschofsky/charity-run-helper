@@ -223,6 +223,6 @@ export const sendReceipt = functions
       from: `"${eventData.title}" <${eventDoc.id}@cr-helper.felisk.io>`,
       to: `"${dataAfter.firstName} ${dataAfter.lastName}" ${dataAfter.email}`,
       subject: 'Thank you for your donation!',
-      text: `Hi ${dataAfter.firstName},\nthank you for donating during ${finalAmount}€ our ${eventData.title} event!`,
+      text: `Hi ${dataAfter.firstName},\nthank you for donating ${finalAmount}€ during our ${eventData.title} event!`,
     });
   });
