@@ -123,6 +123,15 @@ export const calculateDistance = functions
       const doc1 = query.docs[i - 1].data();
       const doc2 = query.docs[i].data();
 
+      const timeDifference = Math.abs(doc2.recordedAt - doc1.recordedAt);
+
+      // Only calculate distance if datapoints are 60s or less apart
+      if (timeDifference > 60000) {
+        continue;
+      }
+
+      const timeDifferenceHours = timeDifference / 1000 / 60 / 60;
+
       const distance = utils.distanceInKmBetweenEarthCoordinates(
         doc1.latitude,
         doc1.longitude,
@@ -130,7 +139,10 @@ export const calculateDistance = functions
         doc2.longitude
       );
 
-      if (distance > 0.005) {
+      const speed = distance / timeDifferenceHours;
+
+      // Filter noise and limit speed
+      if (distance > 0.005 && speed <= 10) {
         totalDistance += distance;
       }
     }
