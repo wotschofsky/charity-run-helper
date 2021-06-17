@@ -47,7 +47,7 @@ class _TrackerPageState extends State<TrackerPage> {
 
     subscription =
         location.onLocationChanged.listen((LocationData updatedLocation) {
-      setState(() {
+      if (updatedLocation.accuracy == null || updatedLocation.accuracy! <= 25) {
         FirebaseFirestore.instance.collection('geopoints').add({
           'latitude': updatedLocation.latitude,
           'longitude': updatedLocation.longitude,
@@ -55,7 +55,7 @@ class _TrackerPageState extends State<TrackerPage> {
           'participationId': selectedParticipation,
           'runnerId': FirebaseAuth.instance.currentUser!.uid
         });
-      });
+      }
     });
 
     if (subscription != null) {
