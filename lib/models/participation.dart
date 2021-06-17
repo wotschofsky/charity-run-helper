@@ -1,6 +1,7 @@
 class Participation {
   const Participation(
       {required this.id,
+      required this.runnerName,
       required this.eventId,
       required this.runnerId,
       required this.sponsorsSum,
@@ -9,6 +10,7 @@ class Participation {
   Participation.fromJson(Map<String, Object?> json)
       : this(
             id: json['id']! as String,
+            runnerName: json['runnerName']! as String,
             eventId: json['eventId']! as String,
             runnerId: json['runnerId']! as String,
             sponsorsSum: ((json['sponsorsSum'] is int)
@@ -19,6 +21,7 @@ class Participation {
                 : json['totalDistance'] as double));
 
   final String id;
+  final String runnerName;
   final String eventId;
   final String runnerId;
   final double sponsorsSum;
@@ -27,6 +30,7 @@ class Participation {
   Map<String, Object?> toJson() {
     return {
       'id': id,
+      'runnerName': runnerName,
       'eventId': eventId,
       'runnerId': runnerId,
       'sponsorsSum': sponsorsSum,

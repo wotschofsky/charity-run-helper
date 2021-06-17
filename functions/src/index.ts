@@ -162,7 +162,36 @@ export const processPayment = functions
     });
   });
 
-export const sendEmails = functions
+export const notifySponsor = functions
+  .region(DEFAULT_REGION)
+  .runWith({ memory: '128MB' })
+  .firestore.document('sponsors/{pointId}')
+  .onCreate(async (snapshot) => {
+    const sponsorData = snapshot.data();
+
+    const [eventDoc, participationDoc] = await Promise.all([
+      eventsCollection.doc(sponsorData.eventId).get(),
+      participationsCollection.doc(sponsorData.participationId).get(),
+    ]);
+
+    const eventData = eventDoc.data();
+    const participationData = participationDoc.data();
+
+    if (!eventData || !participationData) {
+      return;
+    }
+
+    const transporter = utils.getNodemailerTransport();
+
+    await transporter.sendMail({
+      from: `"${eventData.title}" <${eventDoc.id}@cr-helper.felisk.io>`,
+      to: `"${sponsorData.firstName} ${sponsorData.lastName}" ${sponsorData.email}`,
+      subject: `You've been signed up as sponsor for ${eventData.title}`,
+      text: `Hi ${sponsorData.firstName},\nwe're contacting you to notify you that you've been added as sponsor by ${participationData.runnerName} for the ${eventData.title} event. Once the event is over you will receive an email with instructions how to donate.`,
+    });
+  });
+
+export const sendInvoiceEmails = functions
   .region(DEFAULT_REGION)
   .runWith({
     memory: '1GB',

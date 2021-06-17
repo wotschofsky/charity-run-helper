@@ -6,18 +6,26 @@ import 'package:velocity_x/velocity_x.dart';
 import '../models/participation.dart';
 import '../utils/build_snapshot.dart';
 
-class ParticipateButton extends StatelessWidget {
-  const ParticipateButton(this.eventId);
+class ParticipateButton extends StatefulWidget {
+  ParticipateButton(this.eventId);
 
   final String eventId;
 
-  void createParticipation() {
+  @override
+  _ParticipateButtonState createState() => _ParticipateButtonState();
+}
+
+class _ParticipateButtonState extends State<ParticipateButton> {
+  String nameInputValue = '';
+
+  void createParticipation(String runnerName) {
     if (FirebaseAuth.instance.currentUser == null) {
       return;
     }
 
     FirebaseFirestore.instance.collection('participations').add({
-      'eventId': eventId,
+      'runnerName': runnerName,
+      'eventId': widget.eventId,
       'runnerId': FirebaseAuth.instance.currentUser!.uid,
       'sponsorsSum': 0.0,
       'totalDistance': 0.0
@@ -29,7 +37,7 @@ class ParticipateButton extends StatelessWidget {
     final dataStream = FirebaseFirestore.instance
         .collection('participations')
         .where('runnerId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-        .where('eventId', isEqualTo: eventId)
+        .where('eventId', isEqualTo: widget.eventId)
         .limit(1)
         .withConverter<Participation>(
           fromFirestore: (snapshot, _) =>
@@ -57,7 +65,30 @@ class ParticipateButton extends StatelessWidget {
               }
 
               return ElevatedButton(
-                  onPressed: createParticipation,
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (ctx) => AlertDialog(
+                              title: Text('Please enter your name'),
+                              content: TextField(
+                                onChanged: (value) {
+                                  nameInputValue = value;
+                                },
+                                decoration: const InputDecoration(
+                                  border: const OutlineInputBorder(),
+                                  labelText: 'Your Name',
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                    onPressed: () {
+                                      createParticipation(nameInputValue);
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('Participate'))
+                              ],
+                            ));
+                  },
                   child: const Text('Participate'));
             }));
   }
