@@ -83,6 +83,15 @@ class ParticipationDetails extends StatelessWidget {
                 child: ErrorMessage(),
               ),
               builder: (context, snapshot) {
+                if (!snapshot.data!.exists) {
+                  return Scaffold(
+                      appBar: AppBar(),
+                      body: Center(
+                        child: const ErrorMessage(
+                            message: 'Participation not found'),
+                      ));
+                }
+
                 final participationData = snapshot.data!.data()!;
 
                 final eventStream = FirebaseFirestore.instance
