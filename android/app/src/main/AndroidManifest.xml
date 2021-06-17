@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.feliskio.sr_helper">
+    package="com.feliskio.cr_helper">
    <application
-        android:label="sr_helper"
+        android:label="cr_helper"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

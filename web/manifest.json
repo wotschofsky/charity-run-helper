@@ -1,6 +1,6 @@
 {
-    "name": "sr_helper",
-    "short_name": "sr_helper",
+    "name": "cr_helper",
+    "short_name": "cr_helper",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

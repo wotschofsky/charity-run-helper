@@ -34,7 +34,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.feliskio.sr_helper"
+        applicationId "com.feliskio.cr_helper"
         minSdkVersion 16
         targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()
