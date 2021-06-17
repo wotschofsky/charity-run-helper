@@ -48,3 +48,4 @@ app.*.map.json
 # Firebase related
 .firebase
 .firebaserc
+/web/configure-firebase.js
