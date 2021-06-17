@@ -15,6 +15,7 @@ const sponsorsCollection = db.collection('sponsors');
 
 export const usersCleanUp = functions
   .region(DEFAULT_REGION)
+  .runWith({ memory: '256MB' })
   .auth.user()
   .onDelete(async (user) => {
     const { uid } = user;
@@ -40,6 +41,7 @@ export const usersCleanUp = functions
 
 export const eventsCleanUp = functions
   .region(DEFAULT_REGION)
+  .runWith({ memory: '256MB' })
   .firestore.document('events/{eventId}')
   .onDelete(async (snapshot, context) => {
     const { eventId } = context.params;
@@ -56,6 +58,7 @@ export const eventsCleanUp = functions
 
 export const participationsCleanUp = functions
   .region(DEFAULT_REGION)
+  .runWith({ memory: '256MB' })
   .firestore.document('participations/{participationId}')
   .onDelete(async (snapshot, context) => {
     const { participationId } = context.params;
@@ -81,6 +84,7 @@ export const participationsCleanUp = functions
 
 export const calculateSponsorsSum = functions
   .region(DEFAULT_REGION)
+  .runWith({ memory: '128MB' })
   .firestore.document('sponsors/{sponsorId}')
   .onWrite(async (change) => {
     const docData = change.after.data();
@@ -105,6 +109,7 @@ export const calculateSponsorsSum = functions
 
 export const calculateDistance = functions
   .region(DEFAULT_REGION)
+  .runWith({ memory: '1GB' })
   .firestore.document('geopoints/{pointId}')
   .onCreate(async (snapshot) => {
     const docData = snapshot.data();
@@ -154,6 +159,7 @@ export const calculateDistance = functions
 
 export const processPayment = functions
   .region(DEFAULT_REGION)
+  .runWith({ memory: '128MB' })
   .https.onCall(async (data) => {
     const { sponsorId } = data;
 
@@ -250,6 +256,7 @@ export const sendInvoiceEmails = functions
 
 export const sendReceipt = functions
   .region(DEFAULT_REGION)
+  .runWith({ memory: '128MB' })
   .firestore.document('sponsors/{pointId}')
   .onUpdate(async (change) => {
     const dataBefore = change.before.data();
