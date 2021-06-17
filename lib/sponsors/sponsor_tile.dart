@@ -9,7 +9,7 @@ class SponsorTile extends StatelessWidget {
   final double amount;
 
   void delete() {
-    FirebaseFirestore.instance.collection(('participations')).doc(id).delete();
+    FirebaseFirestore.instance.collection(('sponsors')).doc(id).delete();
   }
 
   @override
@@ -30,7 +30,11 @@ class SponsorTile extends StatelessWidget {
                           onPressed: () => Navigator.of(ctx).pop(),
                           child: const Text('Abort')),
                       TextButton(
-                          onPressed: delete, child: const Text('Confirm')),
+                          onPressed: () {
+                            delete();
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('Confirm')),
                     ],
                   ));
         },
