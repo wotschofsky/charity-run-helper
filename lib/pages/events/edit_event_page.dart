@@ -39,6 +39,7 @@ class _EditEventPageState extends State<EditEventPage> {
         'startTime': startTime,
         'endTime': endTime,
         'description': descriptionController.value.text,
+        'hasConcluded': false,
       });
 
       VxNavigator.of(context)

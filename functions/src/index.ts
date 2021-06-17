@@ -162,30 +162,60 @@ export const processPayment = functions
     });
   });
 
-export const sendSponsorLink = functions
+export const sendEmails = functions
   .region(DEFAULT_REGION)
-  .firestore.document('sponsors/{pointId}')
-  .onCreate(async (snapshot) => {
-    const sponsorData = snapshot.data();
+  .runWith({
+    memory: '1GB',
+    timeoutSeconds: 540,
+  })
+  // Run once per hour
+  .pubsub.schedule('0 * * * *')
+  .onRun(async () => {
+    const events = await eventsCollection
+      .where('endTime', '<', new Date())
+      .where('hasConcluded', '==', false)
+      .get();
+    const eventIds = events.docs.map((d) => d.id);
 
-    const eventDoc = await eventsCollection.doc(sponsorData.eventId).get();
-    const eventData = eventDoc.data();
-
-    if (!eventData) {
+    if (eventIds.length === 0) {
       return;
     }
 
-    const transporter = utils.getNodemailerTransport();
+    const sponsors = await sponsorsCollection
+      .where('eventId', 'in', eventIds)
+      .get();
 
-    await transporter.sendMail({
-      from: `"${eventData.title}" <${eventDoc.id}@cr-helper.felisk.io>`,
-      to: `"${sponsorData.firstName} ${sponsorData.lastName}" ${sponsorData.email}`,
-      subject: `Your personal sponsor link for ${eventData.title}`,
-      text: `Hi ${sponsorData.firstName},\nyour personal sponsor link for the ${
-        eventData.title
-      } event is ${functions.config().hosting['base-url']}/sponsors/info?id=${
-        snapshot.id
-      }`,
+    const mails: Promise<void>[] = [];
+
+    sponsors.forEach(async (sponsor) => {
+      const sponsorData = sponsor.data();
+
+      const event = events.docs.find((doc) => doc.id === sponsorData.eventId);
+      if (!event) {
+        return;
+      }
+      const eventData = event.data();
+
+      const transporter = utils.getNodemailerTransport();
+      const mail = transporter.sendMail({
+        from: `"${eventData.title}" <${event.id}@cr-helper.felisk.io>`,
+        to: `"${sponsorData.firstName} ${sponsorData.lastName}" ${sponsorData.email}`,
+        subject: `Your personal sponsor link for ${eventData.title}`,
+        text: `Hi ${
+          sponsorData.firstName
+        },\nyour personal sponsor link for the ${eventData.title} event is ${
+          functions.config().hosting['base-url']
+        }/sponsors/info?id=${sponsor.id}`,
+      });
+      mails.push(mail);
+    });
+
+    await Promise.all(mails);
+
+    events.forEach(async (event) => {
+      await event.ref.update({
+        hasConcluded: true,
+      });
     });
   });
 

@@ -8,6 +8,7 @@ class Event {
     required this.description,
     required this.startTime,
     required this.endTime,
+    required this.hasConcluded,
   });
 
   Event.fromJson(Map<String, Object?> json)
@@ -18,6 +19,7 @@ class Event {
           description: json['description']! as String,
           startTime: (json['startTime']! as Timestamp).toDate(),
           endTime: (json['endTime']! as Timestamp).toDate(),
+          hasConcluded: json['hasConcluded']! as bool,
         );
 
   final String id;
@@ -26,6 +28,7 @@ class Event {
   final String description;
   final DateTime startTime;
   final DateTime endTime;
+  final bool hasConcluded;
 
   Map<String, Object?> toJson() {
     return {
@@ -35,6 +38,7 @@ class Event {
       'description': description,
       'startTime': Timestamp.fromDate(startTime),
       'endTime': Timestamp.fromDate(endTime),
+      'hasConcluded': hasConcluded,
     };
   }
 }
