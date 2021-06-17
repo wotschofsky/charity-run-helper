@@ -26,12 +26,18 @@ class _EditSponsorState extends State<EditSponsor> {
   final TextEditingController zipController = TextEditingController();
   final TextEditingController cityController = TextEditingController();
 
+  bool isProcessing = false;
+
   void submit() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
 
-    FirebaseFirestore.instance.collection('sponsors').add({
+    setState(() {
+      isProcessing = true;
+    });
+
+    await FirebaseFirestore.instance.collection('sponsors').add({
       'eventId': widget.eventId,
       'runnerId': FirebaseAuth.instance.currentUser!.uid,
       'participationId': widget.participationId,
@@ -44,6 +50,8 @@ class _EditSponsorState extends State<EditSponsor> {
       'city': cityController.text,
       'paymentComplete': false,
     });
+
+    Navigator.of(context).pop();
   }
 
   @override
@@ -153,7 +161,7 @@ class _EditSponsorState extends State<EditSponsor> {
                                   ValidationBuilder().minLength(1).build()),
                         ),
                         TextButton(
-                          onPressed: submit,
+                          onPressed: !isProcessing ? submit : null,
                           child: const Text('Submit'),
                         ),
                       ],
