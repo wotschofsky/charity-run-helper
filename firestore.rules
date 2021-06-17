@@ -1,0 +1,35 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    match /events/{documents} {
+    	allow read: if true;
+      allow create: if request.auth.uid == request.resource.data.createdBy;
+      allow update, delete: if request.auth.uid == resource.data.createdBy;
+    }
+
+    match /participations/{documents} {
+    	allow get: if true;
+    	allow list: if request.auth.uid == resource.data.runnerId;
+      allow create: if request.auth.uid == request.resource.data.runnerId;
+      allow update, delete: if request.auth.uid == resource.data.runnerId;
+    }
+
+    match /sponsors/{documents} {
+    	allow get: if true;
+      allow list: if request.auth.uid == resource.data.runnerId;
+      allow create: if request.auth.uid == request.resource.data.runnerId;
+      allow update, delete: if request.auth.uid == resource.data.runnerId;
+    }
+
+    match /geopoints/{documents} {
+    	allow read: if request.auth.uid == resource.data.runnerId;
+      allow create: if request.auth.uid == request.resource.data.runnerId;
+      allow update, delete: if false;
+    }
+  }
+}
