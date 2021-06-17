@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:sr_helper/utils/custom_math.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import '../../models/event.dart';
@@ -12,6 +11,7 @@ import '../../sponsors/sponsor_tile.dart';
 import '../../ui/error_message.dart';
 import '../../ui/icon_info_item.dart';
 import '../../utils/build_snapshot.dart';
+import '../../utils/custom_math.dart';
 
 class ParticipationDetails extends StatelessWidget {
   ParticipationDetails(this.id);
