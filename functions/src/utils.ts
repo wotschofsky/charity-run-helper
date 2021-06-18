@@ -39,12 +39,12 @@ export const getNodemailerTransport = (): nodemailer.Transporter => {
   }
 
   nodemailerTransport = nodemailer.createTransport({
-    host: 'email-smtp.eu-central-1.amazonaws.com',
-    port: 465,
+    host: functions.config().smtp.host,
+    port: parseInt(functions.config().smtp.port),
     secure: true,
     auth: {
-      user: functions.config().ses.user,
-      pass: functions.config().ses.password,
+      user: functions.config().smtp.user,
+      pass: functions.config().smtp.password,
     },
   });
 

@@ -190,7 +190,9 @@ export const notifySponsor = functions
     const transporter = utils.getNodemailerTransport();
 
     await transporter.sendMail({
-      from: `"${eventData.title}" <${eventDoc.id}@cr-helper.felisk.io>`,
+      from: `"${eventData.title}" <${eventDoc.id}@${
+        functions.config().smtp.host
+      }>`,
       to: `"${sponsorData.firstName} ${sponsorData.lastName}" ${sponsorData.email}`,
       subject: `You've been signed up as sponsor for ${eventData.title}`,
       text: `Hi ${sponsorData.firstName},\nwe're contacting you to notify you that you've been added as sponsor by ${participationData.runnerName} for the ${eventData.title} event. Once the event is over you will receive an email with instructions how to donate.`,
@@ -233,7 +235,9 @@ export const sendInvoiceEmails = functions
 
       const transporter = utils.getNodemailerTransport();
       const mail = transporter.sendMail({
-        from: `"${eventData.title}" <${event.id}@cr-helper.felisk.io>`,
+        from: `"${eventData.title}" <${event.id}@${
+          functions.config().smtp.host
+        }>`,
         to: `"${sponsorData.firstName} ${sponsorData.lastName}" ${sponsorData.email}`,
         subject: `Your personal sponsor link for ${eventData.title}`,
         text: `Hi ${
@@ -286,7 +290,9 @@ export const sendReceipt = functions
     const transporter = utils.getNodemailerTransport();
 
     await transporter.sendMail({
-      from: `"${eventData.title}" <${eventDoc.id}@cr-helper.felisk.io>`,
+      from: `"${eventData.title}" <${eventDoc.id}@${
+        functions.config().smtp.host
+      }>`,
       to: `"${dataAfter.firstName} ${dataAfter.lastName}" ${dataAfter.email}`,
       subject: 'Thank you for your donation!',
       text: `Hi ${dataAfter.firstName},\nthank you for donating ${finalAmount}€ during our ${eventData.title} event!`,
