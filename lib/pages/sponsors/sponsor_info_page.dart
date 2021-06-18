@@ -136,9 +136,9 @@ class SponsorInfoPage extends StatelessWidget {
                                                     ),
                                                   ),
                                                   Text(
-                                                      'Thank you for supporting us and ${participationData.runnerId} during our ${eventData.title} event. We truly appreciate it!'),
+                                                      'Thank you for supporting us and ${participationData.runnerName} during our ${eventData.title} event. We truly appreciate it!'),
                                                   Text(
-                                                      'We are thrilled to announce that during the event ${participationData.runnerId} managed to accumulate a stunning ${roundFloor(participationData.totalDistance, 1)} km.'),
+                                                      'We are thrilled to announce that during the event ${participationData.runnerName} managed to accumulate a stunning ${roundFloor(participationData.totalDistance, 1)} km.'),
                                                   Text(
                                                       'Therefore we would like to kindly ask you to donate a total of $formattedTotal€ through the payment button below.'),
                                                   Center(
