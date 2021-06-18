@@ -157,6 +157,16 @@ export const calculateDistance = functions
     });
   });
 
+export const generateEventUrl = functions
+  .region(DEFAULT_REGION)
+  .runWith({ memory: '128MB' })
+  .https.onCall(
+    (data) =>
+      `${functions.config().hosting['base-url']}/events/details?id=${
+        data.eventId
+      }`
+  );
+
 export const processPayment = functions
   .region(DEFAULT_REGION)
   .runWith({ memory: '128MB' })

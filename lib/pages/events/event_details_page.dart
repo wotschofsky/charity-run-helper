@@ -1,3 +1,4 @@
+import 'package:cr_helper/events/event_link.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -102,6 +103,10 @@ class EventDetailsPage extends StatelessWidget {
                           padding: const EdgeInsets.only(top: 8, bottom: 8),
                           child: ParticipateButton(id),
                         ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: EventLink(data.id),
+                      ),
                       Divider(),
                       Padding(
                         padding: const EdgeInsets.only(top: 8),
