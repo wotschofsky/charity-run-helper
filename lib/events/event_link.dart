@@ -41,7 +41,14 @@ class EventLink extends StatelessWidget {
                       onPressed: () => Clipboard.setData(
                           ClipboardData(text: snapshot.data!.data)),
                       icon: const Icon(Icons.copy)),
-                  Text(snapshot.data!.data)
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 16),
+                      child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Text(snapshot.data!.data)),
+                    ),
+                  ),
                 ],
               );
             }),
