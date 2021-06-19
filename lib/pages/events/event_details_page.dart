@@ -78,42 +78,45 @@ class EventDetailsPage extends StatelessWidget {
                         icon: const Icon(Icons.edit),
                         label: const Text('Edit'))
                     : null,
-                body: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: Text(data.title,
-                            style: const TextStyle(fontSize: 32)),
-                      ),
-                      IconInfoItem(
-                          icon: Icons.calendar_today,
-                          label:
-                              '${formatDate(data.startTime)} - ${formatDate(data.endTime)}'),
-                      Padding(
-                          padding: const EdgeInsets.only(bottom: 4),
-                          child: IconInfoItem(
-                            icon: Icons.timer,
-                            label: formatDuration(data.startTime, data.endTime),
-                          )),
-                      if (FirebaseAuth.instance.currentUser != null)
+                body: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                         Padding(
-                          padding: const EdgeInsets.only(top: 8, bottom: 8),
-                          child: ParticipateButton(id),
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: Text(data.title,
+                              style: const TextStyle(fontSize: 32)),
                         ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: EventLink(data.id),
-                      ),
-                      Divider(),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: MarkdownBody(
-                            selectable: true, data: data.description),
-                      ),
-                    ],
+                        IconInfoItem(
+                            icon: Icons.calendar_today,
+                            label:
+                                '${formatDate(data.startTime)} - ${formatDate(data.endTime)}'),
+                        Padding(
+                            padding: const EdgeInsets.only(bottom: 4),
+                            child: IconInfoItem(
+                              icon: Icons.timer,
+                              label:
+                                  formatDuration(data.startTime, data.endTime),
+                            )),
+                        if (FirebaseAuth.instance.currentUser != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8, bottom: 8),
+                            child: ParticipateButton(id),
+                          ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: EventLink(data.id),
+                        ),
+                        Divider(),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: MarkdownBody(
+                              selectable: true, data: data.description),
+                        ),
+                      ],
+                    ),
                   ),
                 ));
           }),
