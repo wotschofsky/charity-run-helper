@@ -68,6 +68,9 @@ class _ParticipationSelectorState extends State<ParticipationSelector> {
 
   String get labelText {
     if (loaded) {
+      if (dropdownItems.isEmpty) {
+        return 'No participations found...';
+      }
       return 'Select Event';
     }
     return 'Loading Events...';
