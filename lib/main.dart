@@ -29,7 +29,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'Flutter Demo',
+      title: 'Charity Run Helper',
       theme: ThemeData(
         primarySwatch: Colors.deepOrange,
       ),
