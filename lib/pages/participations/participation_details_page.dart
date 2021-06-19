@@ -162,12 +162,6 @@ class ParticipationDetails extends StatelessWidget {
                                   ),
                                   const Padding(
                                     padding: const EdgeInsets.only(bottom: 12),
-                                    child: Placeholder(
-                                      fallbackHeight: 300,
-                                    ),
-                                  ),
-                                  const Padding(
-                                    padding: const EdgeInsets.only(bottom: 12),
                                     child: Text('Your Progress',
                                         style: const TextStyle(fontSize: 24)),
                                   ),
@@ -179,9 +173,9 @@ class ParticipationDetails extends StatelessWidget {
                                       icon: Icons.monetization_on,
                                       label:
                                           '${(participationData.sponsorsSum * roundFloor(participationData.totalDistance, 1)).toStringAsFixed(2)} €'),
-                                  const Divider(),
                                   Padding(
-                                    padding: const EdgeInsets.only(bottom: 12),
+                                    padding: const EdgeInsets.only(
+                                        top: 16, bottom: 12),
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
